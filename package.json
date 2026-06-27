@@ -9,13 +9,21 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.34",
+    "@supabase/supabase-js": "^2.103.3",
+    "@tensorflow/tfjs": "^4.11.0",
+    "@upscalerjs/esrgan-thick": "^1.0.0-beta.16",
     "next": "16.2.3",
+    "qrcode": "^1.5.4",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "replicate": "^1.4.0",
+    "upscaler": "^1.0.0-beta.19"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
