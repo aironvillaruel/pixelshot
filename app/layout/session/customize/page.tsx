@@ -186,12 +186,13 @@ function CustomizeContent() {
   }, []);
 
   const buildStripCanvas = useCallback(async (): Promise<HTMLCanvasElement> => {
-    const pad = 16, gap = 8;
-    const imgW = 260, imgH = 180, labelH = 20;
+    const SCALE = 3; // ← ADD THIS — 3x resolution for crisp output
+    const pad = 16 * SCALE, gap = 8 * SCALE;
+    const imgW = 260 * SCALE, imgH = 180 * SCALE, labelH = 20 * SCALE;
     const cols = stripLayout === "portrait" ? 1 : capturedFrames.length;
     const rows = stripLayout === "portrait" ? capturedFrames.length : 1;
     const cw = pad * 2 + cols * (imgW + gap) - gap;
-    const ch = pad * 2 + rows * (imgH + labelH + gap) - gap + 24;
+    const ch = pad * 2 + rows * (imgH + labelH + gap) - gap + 24 * SCALE;
 
     const c = document.createElement("canvas");
     c.width = cw; c.height = ch;
@@ -199,8 +200,8 @@ function CustomizeContent() {
     ctx.fillStyle = stripBg;
     ctx.fillRect(0, 0, cw, ch);
     ctx.strokeStyle = "rgba(255,255,255,0.4)";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(4, 4, cw - 8, ch - 8);
+    ctx.lineWidth = 2 * SCALE;
+    ctx.strokeRect(4 * SCALE, 4 * SCALE, cw - 8 * SCALE, ch - 8 * SCALE);
 
     // Load source images
     const imgs = await Promise.all(
@@ -217,12 +218,12 @@ function CustomizeContent() {
       const col = i % cols, row = Math.floor(i / cols);
       const x = pad + col * (imgW + gap), y = pad + row * (imgH + labelH + gap);
       ctx.drawImage(filteredCanvas, x, y, imgW, imgH);
-      ctx.strokeStyle = "rgba(255,255,255,0.5)"; ctx.lineWidth = 1.5;
+      ctx.strokeStyle = "rgba(255,255,255,0.5)"; ctx.lineWidth = 1.5 * SCALE;
       ctx.strokeRect(x, y, imgW, imgH);
-      ctx.fillStyle = "rgba(255,255,255,0.9)"; ctx.strokeStyle = "black"; ctx.lineWidth = 0.5;
-      ctx.font = "8px monospace"; ctx.textAlign = "center";
-      ctx.strokeText(stripLabel || "PIXELSHOT", x + imgW / 2, y + imgH + 14);
-      ctx.fillText(stripLabel || "PIXELSHOT", x + imgW / 2, y + imgH + 14);
+      ctx.fillStyle = "rgba(255,255,255,0.9)"; ctx.strokeStyle = "black"; ctx.lineWidth = 0.5 * SCALE;
+      ctx.font = `${8 * SCALE}px monospace`; ctx.textAlign = "center";
+      ctx.strokeText(stripLabel || "PIXELSHOT", x + imgW / 2, y + imgH + 14 * SCALE);
+      ctx.fillText(stripLabel || "PIXELSHOT", x + imgW / 2, y + imgH + 14 * SCALE);
     }
 
     return c;
