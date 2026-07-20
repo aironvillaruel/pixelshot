@@ -62,7 +62,7 @@ export function useDuoBooth({ roomId, hostConfig, onSessionStart }: UseDuoBoothA
   useEffect(() => {
     if (!roomId) return;
 
-    const socket = io({ autoConnect: false });
+    const socket = io(process.env.NEXT_PUBLIC_SIGNALING_URL!, { autoConnect: false });
     socketRef.current = socket;
 
     const pc = new RTCPeerConnection(ICE_SERVERS);
