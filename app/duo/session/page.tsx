@@ -60,40 +60,36 @@ function SessionContent() {
   // Composite both panes — local (mirrored) on the left, partner on the
   // right — into a single frame, the same shape whether or not the
   // partner's video has actually arrived yet.
-  const snapPhoto = async (): Promise<string> => {
-    const canvas = canvasRef.current!;
-    const localVideo = localVideoRef.current!;
-    const remoteVideo = remoteVideoRef.current!;
+const snapPhoto = async (): Promise<string> => {
+  const canvas = canvasRef.current!;
+  const localVideo = localVideoRef.current!;
+  const remoteVideo = remoteVideoRef.current!;
 
-    canvas.width = PANE_W * 2 + PANE_GAP;
-    canvas.height = PANE_H;
-    const ctx = canvas.getContext("2d")!;
+  canvas.width = PANE_W * 2 + PANE_GAP;
+  canvas.height = PANE_H;
+  const ctx = canvas.getContext("2d")!;
 
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (localVideo.videoWidth) {
-      ctx.save();
-      ctx.translate(PANE_W, 0);
-      ctx.scale(-1, 1);
-      ctx.drawImage(localVideo, 0, 0, PANE_W, PANE_H);
-      ctx.restore();
-    }
+  if (localVideo.videoWidth) {
+    drawVideoCover(ctx, localVideo, 0, 0, PANE_W, PANE_H, true); // mirrored, like the preview
+  }
 
-    const rightX = PANE_W + PANE_GAP;
-    if (remoteVideo.videoWidth) {
-      ctx.drawImage(remoteVideo, rightX, 0, PANE_W, PANE_H);
-    } else {
-      ctx.fillStyle = "#222";
-      ctx.fillRect(rightX, 0, PANE_W, PANE_H);
-    }
+  const rightX = PANE_W + PANE_GAP;
+  if (remoteVideo.videoWidth) {
+    drawVideoCover(ctx, remoteVideo, rightX, 0, PANE_W, PANE_H);
+  } else {
+    ctx.fillStyle = "#222";
+    ctx.fillRect(rightX, 0, PANE_W, PANE_H);
+  }
 
-    setFlashing(true);
-    await sleep(450);
-    setFlashing(false);
+  setFlashing(true);
+  await sleep(450);
+  setFlashing(false);
 
-    return canvas.toDataURL("image/png");
-  };
+  return canvas.toDataURL("image/png");
+};
 
   const runShotSequence = useCallback(async (cfg: SessionConfig) => {
     setShooting(true);
@@ -240,7 +236,47 @@ function SessionContent() {
   };
 
   // ── Fullscreen ───────────────────────────────────────────────────
+// Mimics CSS `object-fit: cover` when drawing a video frame onto canvas.
+// Crops the source video to match the target box's aspect ratio, instead
+// of stretching it to fit.
+function drawVideoCover(
+  ctx: CanvasRenderingContext2D,
+  video: HTMLVideoElement,
+  dx: number,
+  dy: number,
+  dWidth: number,
+  dHeight: number,
+  mirror = false
+) {
+  const vw = video.videoWidth;
+  const vh = video.videoHeight;
+  if (!vw || !vh) return;
 
+  const targetRatio = dWidth / dHeight;
+  const sourceRatio = vw / vh;
+
+  let sx = 0, sy = 0, sWidth = vw, sHeight = vh;
+
+  if (sourceRatio > targetRatio) {
+    // source is wider than target -> crop left/right
+    sWidth = vh * targetRatio;
+    sx = (vw - sWidth) / 2;
+  } else {
+    // source is taller than target -> crop top/bottom
+    sHeight = vw / targetRatio;
+    sy = (vh - sHeight) / 2;
+  }
+
+  ctx.save();
+  if (mirror) {
+    ctx.translate(dx + dWidth, dy);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, dWidth, dHeight);
+  } else {
+    ctx.drawImage(video, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+  }
+  ctx.restore();
+}
   const toggleFullscreen = () => {
     const wrap = boothWrapRef.current;
     if (!wrap) return;
