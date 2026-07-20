@@ -299,9 +299,9 @@ function SessionContent() {
         <div key={pos} className={`fixed ${pos} w-3 h-3 bg-black border-2 border-white z-20`} />
       ))}
 
-      <div className="flex flex-row w-full items-center justify-end gap-4">
-        <div className="w-1/8" />
-        <div className="relative z-20 w-1/2 flex flex-col items-center gap-4">
+<div className="flex flex-col md:flex-row w-full items-center md:justify-end gap-4">
+  <div className="hidden md:block md:w-1/8" />
+  <div className="relative z-20 w-full md:w-1/2 flex flex-col items-center gap-4">
           {/* Header */}
           <div className="flex flex-col items-center gap-2">
             <h1
@@ -344,8 +344,7 @@ function SessionContent() {
           {/* Camera viewport — two panes side by side */}
           <div
             ref={boothWrapRef}
-            className="relative border-2 border-white/60 bg-[#111] overflow-hidden flex items-stretch justify-center gap-[2px]"
-            style={{ width: "100%", height: "380px" }}
+            className="relative border-2 border-white/60 bg-[#111] overflow-hidden flex flex-col md:flex-row items-stretch justify-center gap-[2px] h-[520px] md:h-[380px]" style={{ width: "100%" }}
           >
             {/* Reticles */}
             {[
@@ -467,7 +466,7 @@ function SessionContent() {
           </button>
         </div>
 
-        <div className="w-1/4 bg-gray-100 flex p-4 justify-center flex-wrap">
+       <div className="w-full md:w-1/4 bg-gray-100 flex p-4 justify-center flex-wrap">
           {/* Film strip */}
           {capturedFrames.length > 0 && (
             <>
