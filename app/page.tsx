@@ -8,6 +8,9 @@ export default function Home() {
    function getStart() {
     router.push(`/layout`);
   }
+   function handleDuo() {
+    router.push(`/duo`);
+  }
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-center py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -45,9 +48,20 @@ bg-black text-white border-black hover:bg-black/90 active:translate-x-1 active:t
               // boxShadow: canProceed ? "4px 4px 0 #555" : "none",
             }}
           >
-            GET STARTED
+           SOLO
           </button>
-            
+             <button
+            onClick={handleDuo}
+            // disabled={!canProceed}
+            className={`w-1/2 py-4 text-sm tracking-[0.3em] border-2 transition-none
+bg-black text-white border-black hover:bg-black/90 active:translate-x-1 active:translate-y-1 cursor-pointer`}
+            style={{
+              fontFamily: "'Press Start 2P', monospace",
+              // boxShadow: canProceed ? "4px 4px 0 #555" : "none",
+            }}
+          >
+           DUO
+          </button>
         </div>
           
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');`}</style>
