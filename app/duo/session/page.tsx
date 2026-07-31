@@ -46,6 +46,7 @@ function SessionContent() {
   const [flashing, setFlashing] = useState(false);
   const [done, setDone] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -177,6 +178,24 @@ const snapPhoto = async (): Promise<string> => {
       setTimeout(() => setCopied(false), 1800);
     } catch {
       // clipboard denied — the code is printed on screen regardless
+    }
+  };
+
+  const copyLink = async () => {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("room", roomId);
+      // Carry shots/orientation along too, so whoever opens the link gets
+      // the same session settings the host configured.
+      if (hostConfig) {
+        url.searchParams.set("shots", String(hostConfig.shots));
+        url.searchParams.set("orientation", hostConfig.orientation);
+      }
+      await navigator.clipboard.writeText(url.toString());
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 1800);
+    } catch {
+      // clipboard denied — the code is still available via BOOTH CODE
     }
   };
 
@@ -358,6 +377,13 @@ function drawVideoCover(
               style={{ fontFamily: "'Press Start 2P', monospace" }}
             >
               {copied ? "COPIED!" : `BOOTH CODE: ${roomId}`}
+            </button>
+            <button
+              onClick={copyLink}
+              className="text-[6px] tracking-[0.2em] border border-black/30 px-2 py-1 hover:border-black cursor-pointer"
+              style={{ fontFamily: "'Press Start 2P', monospace" }}
+            >
+              {linkCopied ? "LINK COPIED!" : "🔗 COPY LINK"}
             </button>
           </div>
 
