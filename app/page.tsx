@@ -11,6 +11,10 @@ export default function Home() {
    function handleDuo() {
     router.push(`/duo`);
   }
+
+  function handleSpecial() {
+    router.push(`/special`);
+  }
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-center py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -62,6 +66,21 @@ bg-black text-white border-black hover:bg-black/90 active:translate-x-1 active:t
           >
            DUO
           </button>
+          
+
+             <button
+            onClick={handleSpecial}
+            // disabled={!canProceed}
+            className={`w-1/2 py-4 text-sm tracking-[0.3em] border-2 transition-none
+bg-black text-white border-black hover:bg-black/90 active:translate-x-1 active:translate-y-1 cursor-pointer`}
+            style={{
+              fontFamily: "'Press Start 2P', monospace",
+              // boxShadow: canProceed ? "4px 4px 0 #555" : "none",
+            }}
+          >
+           PIXEL:SPECIAL
+          </button>
+          
         </div>
           
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');`}</style>
